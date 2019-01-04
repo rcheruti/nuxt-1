@@ -12,14 +12,14 @@
       <my-input v-model="valor"/>
     </form>
     
-    <svg template="baloes">
-      <g class="baloes">
-        <circle class="circulo c1" stroke="#444" stroke-width="2" r="5" fill="none"/>
+    <svg style="display:none;">
+      <g class="baloes" ref="baloes">
+        <circle class="circulo c1" stroke="#444" stroke-width="2" r="5.767" fill="none"/>
         <circle class="circulo c2" stroke="#555" stroke-width="2" r="2" fill="none"/>
       </g>
     </svg>
-    <svg template="bola">
-      <circle class="bola" r="1" stroke="none" stroke-width="0"/>
+    <svg style="display:none;">
+      <circle ref="bola" class="bola" r="10.545633456" stroke="none" stroke-width="0"/>
     </svg>
     
   </div>
@@ -41,39 +41,40 @@ export default {
   mounted: function(){
     this.formulario =   this.$el.querySelector('form');
     this.quadro =       this.$el.querySelector('.quadro');
-    this.moldeBaloes =  this.$el.querySelector('[template="baloes"]').children[0];
-    this.moldeBola =    this.$el.querySelector('[template="bola"]').children[0];
-    
   },
   methods: {
     fireworks(ev) {
       if( ev.target == this.formulario || this.formulario.contains(ev.target) ) return;
-      console.log('fireworks', ev, this);
+      function _updateSvg(progress){
+        let obj = progress.animatables[0].target ;
+        obj.$el.setAttribute('transform', `translate(${obj.x} , ${obj.y})`);
+      }
       
-      let cloneBaloes = this.moldeBaloes.cloneNode(true);
+      let cloneBaloes = this.$refs.baloes.cloneNode(true);
       let circuloC1 = cloneBaloes.querySelector('.circulo.c1');
       let circuloC2 = cloneBaloes.querySelector('.circulo.c2');
-      cloneBaloes.style.transform = `translate( ${ev.center.x}px, ${ev.center.y}px )`;
+      cloneBaloes.setAttribute('transform', `translate(${ev.center.x} , ${ev.center.y})`);
       
       this.quadro.appendChild( cloneBaloes );
       let timeline = anime.timeline();
-      timeline.add({ targets: circuloC1, duration: 1400, offset: 0, easing: 'easeOutCubic', r: '155' });
+      timeline.add({ targets: circuloC1, duration: 1400, offset: 0, easing: 'easeOutCubic', r: 155 });
       timeline.add({ targets: circuloC1, duration:  400, offset: '-=1200', easing: 'easeOutCubic', opacity: 0 });
-      timeline.add({ targets: circuloC2, duration: 1400, offset: 0, easing: 'easeOutBack', r: '65' });
+      timeline.add({ targets: circuloC2, duration: 1400, offset: 0, easing: 'easeOutBack', r: 65 });
       timeline.add({ targets: circuloC2, duration:  600, offset: '-=1000', easing: 'easeOutCubic', opacity: 0 });
       
       for( let i = 0; i < Math.random() * 16 + 6; i++ ){
-        let temp = this.moldeBola.cloneNode(true);
+        let temp = this.$refs.bola.cloneNode(true);
         let dist = 40;
         let x = Math.random() * dist - (dist/2) ;
         let y = Math.random() * dist - (dist/2) ;
         let tam = Math.sqrt( x*x + y*y );
         let d_x = x * (200 / tam) - x;
         let d_y = y * (200 / tam) - y;
-        temp.style.transform = `translate( ${x}px, ${y}px )`;
+        temp.setAttribute('transform', `translate(${x} , ${y})`);
         temp.setAttribute('fill', this.colors[ parseInt( Math.random() * this.colors.length ) ] );
         cloneBaloes.appendChild( temp );
-        timeline.add({ targets: temp, duration: 1400, offset: 0, easing: 'easeOutCubic', r: [{ value: '1' }, { value: '25' }, { value: '0' }], translateX: d_x, translateY: d_y });
+        timeline.add({ targets: temp, duration: 1400, offset: 0, easing: 'easeOutCubic', r: [{ value: 1 }, { value: 25 }, { value: 0 }] });
+        timeline.add({ targets: { x: 0, y: 0, $el: temp }, duration: 1400, offset: 0, easing: 'easeOutCubic', x: d_x, y: d_y, update: _updateSvg });
         timeline.add({ targets: temp, duration: 400, offset: '-=600', easing: 'easeOutCubic', opacity: 0 });
       }
       
@@ -110,6 +111,7 @@ export default {
     left: 0; top: 0;
     height: 100%;
     width: 100%;
+    overflow: hidden;
   }
   .light {
     position: absolute;

@@ -34,7 +34,10 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: '~plugins/plugins', ssr: false }
+    { src: '~plugins/polyfill-raf', ssr: false } ,
+    { src: '~plugins/polyfill-typed-array', ssr: false } ,
+    { src: '~plugins/polyfill-array-find', ssr: false } ,
+    { src: '~plugins/plugins', ssr: false } 
   ],
 
   /*
