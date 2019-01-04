@@ -61,5 +61,14 @@ module.exports = {
     extend(config, ctx) {
       
     }
+  },
+  
+  /**
+   * Configs for de "nuxt generate" command
+   */
+  generate: {
+    // Use the "/docs" folder for the final build to let the assets
+    // availlable on GitHub
+    dir: 'docs'
   }
 }
