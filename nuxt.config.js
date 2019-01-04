@@ -70,5 +70,9 @@ module.exports = {
     // Use the "/docs" folder for the final build to let the assets
     // availlable on GitHub
     dir: 'docs'
+  },
+  
+  router: {
+    base: ''
   }
 }
