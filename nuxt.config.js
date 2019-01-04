@@ -73,6 +73,7 @@ module.exports = {
   },
   
   router: {
-    base: ''
+    base: '/nuxt-1/'
   }
+  
 }
