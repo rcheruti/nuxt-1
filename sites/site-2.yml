@@ -1,0 +1,9 @@
+
+name: Site 2
+products:
+  - name: Item 1
+    img: chocolate-1.jpg
+  - name: Item 2
+    img: chocolate-2.jpg
+  - name: Item 3
+    img: chocolate-3.jpg

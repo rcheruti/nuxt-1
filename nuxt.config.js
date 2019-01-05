@@ -1,8 +1,25 @@
 const pkg = require('./package')
+const yml = require('js-yaml');
+const fs  = require('fs');
+//const sass = require('node-sass');
+//const sassUtils = require('node-sass-utils')(sass);
+
+let site = process.env.site || 'site-1';
+console.log('Site: ', site );
+
+// load configurations
+let siteConfig = yml.safeLoad(fs.readFileSync(`./sites/${site}.yml`));
+
+let generateDir = 'docs' ; //+ (site ? '_'+site : '');
 
 module.exports = {
   mode: 'universal',
-
+  
+  env: {
+    site: site ,
+    ...siteConfig
+  },
+  
   /*
   ** Headers of the page
   */
@@ -45,7 +62,11 @@ module.exports = {
   */
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/proxy',
+    ['nuxt-sass-resources-loader', [
+      `sites/${site}.scss`
+    ]]
   ],
   /*
   ** Axios module configuration
@@ -72,7 +93,7 @@ module.exports = {
   generate: {
     // Use the "/docs" folder for the final build to let the assets
     // availlable on GitHub
-    dir: 'docs'
+    dir: generateDir
   },
   
   router: {

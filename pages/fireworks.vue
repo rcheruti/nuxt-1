@@ -1,90 +1,45 @@
 <template>
-  <div id="fireworks-form" v-hammer:tap="fireworks">
-  
+  <div id="fireworks-form" >
     <div class="light"></div>
     <div class="help">Click on the black Space!</div>
-    <svg class="quadro"></svg>
     
+    <fireworks-panel ref="fw"/>
     
-    <form>
-      <h2>Fireworks!</h2>
+    <form @click="firework">
+      <h2>Fireworks! <span>Click in this form for a random Firework!</span></h2>
       <hr />
       <my-input v-model="valor"/>
     </form>
-    
-    <svg style="display:none;">
-      <g class="baloes" ref="baloes">
-        <circle class="circulo c1" stroke="#444" stroke-width="2" r="5.767" fill="none"/>
-        <circle class="circulo c2" stroke="#555" stroke-width="2" r="2" fill="none"/>
-      </g>
-    </svg>
-    <svg style="display:none;">
-      <circle ref="bola" class="bola" r="10.545633456" stroke="none" stroke-width="0"/>
-    </svg>
-    
   </div>
 </template>
 
 <script>
 import MyInput from '~/components/MyInput.vue';
+import FireworksPanel from '~/components/FireworksPanel.vue';
 import * as anime from 'animejs';
 export default {
   data() {
     return {
-      valor: 'oi',
-      colors: ['rgb(255, 74, 74)','rgb(105, 204, 110)','rgb(29, 153, 255)', 'rgb(214, 228, 29)', 'rgb(247, 117, 240)']
+      valor: 'oi'
     };
   },
   components: {
-    MyInput
+    MyInput, FireworksPanel
   },
-  mounted: function(){
-    this.formulario =   this.$el.querySelector('form');
-    this.quadro =       this.$el.querySelector('.quadro');
+  mounted() {
+    let _fire = () => {
+      this.$refs.fw.randomFireworks();
+      let nextTime = ( 3000 * Math.random() ) + 1000 ;
+      setTimeout(_fire, nextTime);
+    }
+    setTimeout(_fire, 2000);
   },
   methods: {
-    fireworks(ev) {
-      if( ev.target == this.formulario || this.formulario.contains(ev.target) ) return;
-      function _updateSvg(progress){
-        let obj = progress.animatables[0].target ;
-        obj.$el.setAttribute('transform', `translate(${obj.x} , ${obj.y})`);
-      }
-      
-      let cloneBaloes = this.$refs.baloes.cloneNode(true);
-      let circuloC1 = cloneBaloes.querySelector('.circulo.c1');
-      let circuloC2 = cloneBaloes.querySelector('.circulo.c2');
-      cloneBaloes.setAttribute('transform', `translate(${ev.center.x} , ${ev.center.y})`);
-      
-      this.quadro.appendChild( cloneBaloes );
-      let timeline = anime.timeline();
-      timeline.add({ targets: circuloC1, duration: 1400, offset: 0, easing: 'easeOutCubic', r: 155 });
-      timeline.add({ targets: circuloC1, duration:  400, offset: '-=1200', easing: 'easeOutCubic', opacity: 0 });
-      timeline.add({ targets: circuloC2, duration: 1400, offset: 0, easing: 'easeOutBack', r: 65 });
-      timeline.add({ targets: circuloC2, duration:  600, offset: '-=1000', easing: 'easeOutCubic', opacity: 0 });
-      
-      for( let i = 0; i < Math.random() * 16 + 6; i++ ){
-        let temp = this.$refs.bola.cloneNode(true);
-        let dist = 40;
-        let x = Math.random() * dist - (dist/2) ;
-        let y = Math.random() * dist - (dist/2) ;
-        let tam = Math.sqrt( x*x + y*y );
-        let d_x = x * (200 / tam) - x;
-        let d_y = y * (200 / tam) - y;
-        temp.setAttribute('transform', `translate(${x} , ${y})`);
-        temp.setAttribute('fill', this.colors[ parseInt( Math.random() * this.colors.length ) ] );
-        cloneBaloes.appendChild( temp );
-        timeline.add({ targets: temp, duration: 1400, offset: 0, easing: 'easeOutCubic', r: [{ value: 1 }, { value: 25 }, { value: 0 }] });
-        timeline.add({ targets: { x: 0, y: 0, $el: temp }, duration: 1400, offset: 0, easing: 'easeOutCubic', x: d_x, y: d_y, update: _updateSvg });
-        timeline.add({ targets: temp, duration: 400, offset: '-=600', easing: 'easeOutCubic', opacity: 0 });
-      }
-      
-      setTimeout(()=>{
-        this.quadro.removeChild( cloneBaloes );
-      }, 1400 );
+    firework() {
+      this.$refs.fw.randomFireworks();
     }
   }
 }
-
 </script>
 
 <style lang="scss">
@@ -144,18 +99,15 @@ export default {
   
   h2 {
     color: #777;
+    
+    span {
+      font-weight: normal;
+      font-size: 14px;
+      float: right;
+    }
   }
   hr {
     border: 1px solid #222;
-  }
-  
-  .baloes {
-    .circulo {
-      opacity: 0.7;
-    }
-    .bola {
-      border-radius: 50%;
-    }
   }
   
 }
