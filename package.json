@@ -19,6 +19,7 @@
     "hammerjs": "^2.0.8",
     "normalize.css": "^8.0.1",
     "nuxt": "^2.0.0",
+    "vue-material": "^1.0.0-beta-10.2",
     "vue2-hammer": "^2.1.2"
   },
   "devDependencies": {

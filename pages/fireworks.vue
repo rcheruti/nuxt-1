@@ -5,22 +5,44 @@
     
     <fireworks-panel ref="fw"/>
     
-    <form @click="firework">
-      <h2>Fireworks! <span>Click in this form for a random Firework!</span></h2>
-      <hr />
-      <my-input v-model="valor"/>
+    <form>
+      <h2>Fireworks Form!</h2>
+      <div class="line"></div>
+      
+      <div class="md-layout md-gutter">
+        <div class="md-layout-item">
+          <md-field>
+            <label>Write some text</label>
+            <md-input v-model="valor"></md-input>
+          </md-field>
+        </div>
+        <div class="md-layout-item">
+          <md-datepicker v-model="date" />
+        </div>
+      </div>
+      <div class="md-layout md-alignment-bottom-right">
+        <md-button class="md-raised" @click="firework">Fire!</md-button>
+      </div>
+      
+      <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar">
+        <span>You got the {{ lastAchievement }} achievement!</span>
+        <md-button class="md-primary" @click="showSnackbar = false">Ok</md-button>
+      </md-snackbar>
     </form>
   </div>
 </template>
 
 <script>
-import MyInput from '~/components/MyInput.vue';
 import FireworksPanel from '~/components/FireworksPanel.vue';
 import * as anime from 'animejs';
 export default {
   data() {
     return {
-      valor: 'oi'
+      valor: '',
+      date: null ,
+      count: 0 ,
+      lastAchievement: 0,
+      showSnackbar: false
     };
   },
   components: {
@@ -37,12 +59,17 @@ export default {
   methods: {
     firework() {
       this.$refs.fw.randomFireworks();
+      this.count++;
+      if( this.count % 25 == 0 ){
+        this.showSnackbar = true;
+        this.lastAchievement = this.count;
+      } 
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #fireworks-form {
   
   position: relative;
@@ -106,8 +133,13 @@ export default {
       float: right;
     }
   }
-  hr {
-    border: 1px solid #222;
+  .line {
+    background: #222;
+    height: 10px;
+    border-radius: 5px;
+    width: 100%;
+    margin: 10px 0 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0, 0.6) inset;
   }
   
 }

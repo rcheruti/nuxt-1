@@ -21,7 +21,6 @@ section {
   .header {
     width: 100%;
     height: 20px;
-    /* background: #900; */
     background: $barColor;
   }
   .content {

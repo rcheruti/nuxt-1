@@ -1,8 +1,6 @@
 const pkg = require('./package')
 const yml = require('js-yaml');
 const fs  = require('fs');
-//const sass = require('node-sass');
-//const sassUtils = require('node-sass-utils')(sass);
 
 let site = process.env.site || 'site-1';
 console.log('Site: ', site );
@@ -31,7 +29,8 @@ module.exports = {
       { hid: 'description', name: 'description', content: pkg.description }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' } ,
+      { rel: 'stylesheet', type: 'text/css', href: 'https://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons' } ,
     ]
   },
 
@@ -44,7 +43,9 @@ module.exports = {
   ** Global CSS
   */
   css: [
-    'normalize.css'
+    'normalize.css' ,
+    'vue-material/dist/vue-material.min.css',
+    'vue-material/dist/theme/default-dark.css',
   ],
 
   /*

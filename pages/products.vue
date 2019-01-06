@@ -17,15 +17,8 @@ export default {
   layout: 'sales',
   data(that) {
     return {
-      /*
-      products: [
-        { img: 'flower-1.jpg', name: 'Flower 1' } ,
-        { img: 'flower-2.jpg', name: 'Flower 2' } ,
-        { img: 'flower-3.jpg', name: 'Flower 3' } ,
-      ],
-      */
-      products: process.env.products ,
-      that: process.env.name
+      products:   process.env.products ,
+      that:       process.env.name
     };
   },
   
